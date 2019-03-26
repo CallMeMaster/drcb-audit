@@ -13,6 +13,7 @@
 (function() {
     'use strict';
 
+	alert(123);
     var companylist;
     var runner;
 	var homeurl="https://www.qichacha.com";
