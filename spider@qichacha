@@ -1,0 +1,171 @@
+// ==UserScript==
+// @name         工商企业信息@企查查
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  爬取工商企业信息
+// @author       Pan Hao
+// @match        https://www.qichacha.com*
+// @grant        none
+// @require      https://code.jquery.com/jquery-3.3.1.min.js
+// @require      http://oss.sheetjs.com/js-xlsx/xlsx.full.min.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    var companylist;
+    var runner;
+	var homeurl="https://www.qichacha.com";
+
+	var init = function () {
+		$("body").prepend("<div id='DRCBDiv' class='clickable' style='display:flex;flex-direction:row'></div>");
+		$("#DRCBDiv").append("<div style='margin:4 textAlign:center'>使用说明：请导入包含【企业名称】字段的excel文件！</div>");
+		$("#DRCBDiv").append("<input id='startBtn' type ='file' style='margin:4'></input>");
+
+        //file upload
+		$("#startBtn").change(function (obj) {
+			if (obj.files) {
+				return;
+			}
+			var f = obj.target.files[0];
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				var data = e.target.result;
+				var workbook = XLSX.read(data, {
+						type: 'binary'
+					});
+				//workbook.SheetNames[0]是获取Sheets中第一个Sheet的名字
+				//workbook.Sheets[Sheet名]获取第一个Sheet的数据
+				companylist = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+				$("#DRCBDiv").after("<div><table id='dataGrid'><tr><td>序号</td><td>名称</td><td>关系人</td><td>备注</td><td>状态</td></tr><table><div>");
+				starter(companylist);
+			};
+			reader.readAsBinaryString(f);
+		});
+		//enable sync
+		$.ajaxSetup({
+			async: false
+		});
+		window.companyIndex = window.companyIndex||0;
+	}();
+
+    var starter =function(companyList) {
+		var run = function(){
+            console.log("search "+companyIndex+":"+companylist[companyIndex].企业名称);
+            var company = new Company(companylist[companyIndex].企业名称);
+            try{
+                company.load();
+                print(company);
+            }catch(e){
+
+            }finally{
+                companyIndex++;
+            }
+            console.log(company);
+            clearInterval(runner);
+            runner=setInterval(run,getTime(companyIndex)*1001);
+            if(companyIndex>=companylist.length){
+                clearInterval(runner);
+                delete window.companyIndex;
+               // $("body").replaceWith($("#dataGrid")[0].outerHTML);
+                console.log("done!");
+            }
+        }
+        runner = setInterval(run,getTime(companyIndex)*1001);
+    }
+    var print=function(company){
+        var tr="";
+        var persons = [].concat(company.partner).concat(company.mainmember);
+        console.log(persons);
+        $.each(persons,function(i,person){
+            tr += "<tr>";
+            tr += "<td>"+companyIndex+"</td>";
+            tr += "<td>"+companyInfo.name+"</td>";
+            tr += "<td>"+persons[personIndex].name+"</td>";
+            tr += "<td>"+persons[personIndex].share+"</td>";
+            tr += "<td>SUCCESS</td>";
+            tr += "/<tr>";
+            console.log(tr);
+
+        });
+        if(persons.length<=0) {
+            tr += "<tr>";
+            tr += "<td>"+companyIndex+"<td>";
+            tr += "<td>"+companyInfo.name+"</td>";
+            tr += "<td><td>";
+            tr += "<td>FAIL<td>";
+            tr += "/<tr>";
+        }
+        console.log(tr);
+		$("#dataGrid").append(tr);
+    }
+
+    //返回检测
+    var verifyStop = function(data) {
+        if(data.indexOf("window.location123123123") != -1) {
+            clearInterval(runner);
+            window.companyIndex = 0;
+            console.log(window.result);
+        }
+    }
+
+    //间隔时间测算
+	var getTime = function(index){
+        if(index<100) {
+            return 0;
+        }
+        else if(index>300) {
+            return 10;
+        }
+        else {
+            return 10;
+        }
+	}
+
+    var Company = function(name) {
+        this.name = name;
+        this.partner = [];
+        this.mainmember = [];
+        this.getHtml = function() {
+            var detailHtml = "";
+            $.get(homeurl + "/search?key="+this.name,function(data){
+                verifyStop(data);
+                var name=$(data).find("#search-result tr:eq(0) a.ma_h1").text();
+                var url=$(data).find("#search-result tr:eq(0) a.ma_h1").attr("href");
+                $.get(homeurl + url,function(data){
+                    verifyStop(data);
+                    detailHtml = data;
+                })
+            })
+            return detailHtml;
+        }
+
+        this.getPartner = function(html) {
+            var partner = [];
+            $.each($(html).find("#partnerslist > table > tbody > tr").slice(1),function(i,tr){
+                var p = {};
+                p.name = $(tr).find("td:nth-child(2) > a > h3").text();
+                p.share = $(tr).find("td:nth-child(3).text-center").text();
+                partner[i]=p;
+            });
+            return partner;
+        }
+        this.getMainmember = function(html) {
+            var mainmember = [];
+            $.each($(html).find("#Mainmember table > tbody > tr").slice(1),function(i,tr){
+                var p = {};
+                p.name = $(tr).find("td:nth-child(2) > div > a.c_a > h3").text();
+                p.share = $(tr).find("td.text-center").text();
+                mainmember[i]=p;
+            });
+            return mainmember;
+        }
+        this.render=function(html){
+            this.partner = this.getPartner(html);
+            this.mainmember = this.getMainmember(html);
+        }
+        this.load=function(){
+            this.render(this.getHtml());
+        }
+    }
+})();
