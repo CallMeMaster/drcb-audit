@@ -68,7 +68,7 @@
             if(companyIndex>=companylist.length){
                 clearInterval(runner);
                 delete window.companyIndex;
-               // $("body").replaceWith($("#dataGrid")[0].outerHTML);
+                $("body").replaceWith($("#dataGrid")[0].outerHTML);
                 console.log("done!");
             }
         }
@@ -76,29 +76,26 @@
     }
     var print=function(company){
         var tr="";
-        var persons = [].concat(company.partner).concat(company.mainmember);
-        console.log(persons);
+        var persons = [].concat(company.legal).concat(company.partner).concat(company.mainmember);
         $.each(persons,function(i,person){
             tr += "<tr>";
             tr += "<td>"+companyIndex+"</td>";
-            tr += "<td>"+companyInfo.name+"</td>";
-            tr += "<td>"+persons[personIndex].name+"</td>";
-            tr += "<td>"+persons[personIndex].share+"</td>";
+            tr += "<td>"+company.name+"</td>";
+            tr += "<td>"+person.name+"</td>";
+            tr += "<td>"+person.share+"</td>";
             tr += "<td>SUCCESS</td>";
             tr += "/<tr>";
-            console.log(tr);
-
         });
         if(persons.length<=0) {
+            console.error("faile");
             tr += "<tr>";
-            tr += "<td>"+companyIndex+"<td>";
-            tr += "<td>"+companyInfo.name+"</td>";
-            tr += "<td><td>";
-            tr += "<td>FAIL<td>";
+            tr += "<td>"+companyIndex+"</td>";
+            tr += "<td>"+company.name+"</td>";
+            tr += "<td></td>";
+            tr += "<td>FAIL</td>";
             tr += "/<tr>";
         }
-        console.log(tr);
-		$("#dataGrid").append(tr);
+        $("#dataGrid").append(tr);
     }
 
     //返回检测
@@ -112,21 +109,14 @@
 
     //间隔时间测算
 	var getTime = function(index){
-        if(index<100) {
-            return 0;
-        }
-        else if(index>300) {
-            return 10;
-        }
-        else {
-            return 10;
-        }
+        return 10
 	}
 
     var Company = function(name) {
         this.name = name;
         this.partner = [];
         this.mainmember = [];
+        this.legal=[];
         this.getHtml = function() {
             var detailHtml = "";
             $.get(homeurl + "/search?key="+this.name,function(data){
@@ -161,9 +151,18 @@
             });
             return mainmember;
         }
+        this.getLegal = function(html){
+            var legal=[];
+            var p = {};
+            p.name = $(html).find("#Cominfo > table:nth-child(3) > tbody > tr:nth-child(2) > td.ma_left > div > div.clearfix > div:nth-child(2) > a > h2").text();
+            p.share = '法人';
+            legal[0] = p;
+            return legal;
+        }
         this.render=function(html){
             this.partner = this.getPartner(html);
             this.mainmember = this.getMainmember(html);
+            this.legal = this.getLegal(html);
         }
         this.load=function(){
             this.render(this.getHtml());
