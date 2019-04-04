@@ -39,7 +39,7 @@ $.extend({
 			$.each(data, function (i, item) {
 				tr += "<tr>";
 				$.each(this.param.column,function(j,column){
-					tr += "<td>" + item.["column"] + "</td>";
+					tr += "<td>" + item["column"] + "</td>";
 				});
 			});
 			$("#drcbGrid").append(tr);
