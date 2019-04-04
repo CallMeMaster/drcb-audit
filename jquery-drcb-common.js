@@ -2,6 +2,7 @@ $.extend({
 	drcb: {
 		param:{column:[],description:"",trigger: function(){}},
 		initView: function (param) {
+			if(param==undefined||param==null) return;
 			this.param = param;
 			$("body").prepend("<div id='DRCBDiv' class='clickable' style='display:flex;flex-direction:row'></div>");
 			$("#DRCBDiv").append("<div style='margin:4 textAlign:center'>" + param.description + "</div>");
@@ -25,7 +26,7 @@ $.extend({
 						});
 					var datalist = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 					$("#DRCBDiv").after("<div><table id='drcbGrid'><tr>" + table + "</tr><table><div>");
-					starter(datalist);
+					param.trigger(datalist);
 				};
 				reader.readAsBinaryString(f);
 			});
