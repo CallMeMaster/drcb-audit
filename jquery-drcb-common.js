@@ -1,6 +1,6 @@
 $.extend({
 	drcb: {
-		param:{column:[],description:"";trigger: function(){}},
+		param:{column:[],description:"",trigger: function(){}},
 		initView: function (param) {
 			this.param = param;
 			$("body").prepend("<div id='DRCBDiv' class='clickable' style='display:flex;flex-direction:row'></div>");
