@@ -184,7 +184,6 @@
             this.partner = this.getPartner();
             this.mainmember = this.getMainmember();
             this.legal = this.getLegal();
-            console.log("11111111115");
         };
         this.load=function(){
             this.render();
