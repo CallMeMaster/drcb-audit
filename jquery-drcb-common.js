@@ -4,7 +4,7 @@ $.extend({
 		param: {
 			column: [],
 			description: "",
-			queryInfo: function () {},
+			query: function () {},
 			timeInerval:10
 		},
 		initView: function (param) {
@@ -53,17 +53,17 @@ $.extend({
 			$("#drcbGrid").append(tr);
 		},
 		
-		getTime = function(dataIndex){
+		getTime: function(dataIndex){
 			return this.param.timeInerval;
 		},
 
-		starter = function (datalist) {
+		starter: function (datalist) {
 			var run = function () {
 				console.log("search:"+datalist[dataIndex]);
 				var data = datalist[dataIndex];
 				//handle
 				try {
-					var result = this.param.queryInfo(data);
+					var result = this.param.query(data);
 					print(result);
 				} catch (e) {}
 				finally {
