@@ -63,7 +63,7 @@ $.extend({
 						});
 					var datalist = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 					$("#DRCBDiv").after("<div><table id='drcbGrid'><tr>" + table + "</tr><table><div>");
-					starter(datalist);
+					this.starter(datalist);
 				};
 				reader.readAsBinaryString(f);
 			});
