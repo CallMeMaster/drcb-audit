@@ -39,6 +39,7 @@ $.extend({
 		
 		initView: function (param) {
 			var starter = this.starter;
+			console.log(starter);
 			if (param == undefined || param == null)
 				return;
 			this.param = param;
