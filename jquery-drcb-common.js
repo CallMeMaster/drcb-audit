@@ -5,7 +5,7 @@ $.extend({
 			column: [],
 			description: "",
 			query: function () {},
-			time-inerval:10
+			timeInerval:10
 		},
 		initView: function (param) {
 			if (param == undefined || param == null)
@@ -54,7 +54,7 @@ $.extend({
 		},
 		
 		getTime = function(dataIndex){
-			return this.param.time-inerval;
+			return this.param.timeInerval;
 		},
 
 		starter = function (datalist) {
