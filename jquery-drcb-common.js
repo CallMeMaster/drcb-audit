@@ -7,6 +7,36 @@ $.extend({
 			query: function () {},
 			timeInerval:10
 		},
+		getTime: function(dataIndex){
+			return this.param.timeInerval;
+		},
+
+		starter: function (datalist) {
+			var run = function () {
+				console.log("search:"+datalist[dataIndex]);
+				var data = datalist[dataIndex];
+				//handle
+				try {
+					var result = this.param.query(data);
+					print(result);
+				} catch (e) {}
+				finally {
+					dataIndex++;
+				}
+				
+				clearInterval(runner);
+				runner = setInterval(run, getTime(dataIndex) * 1001);
+				if (dataIndex >= datalist.length) {
+					clearInterval(runner);
+					delete this.dataIndex;
+					//结束
+					$("body").replaceWith($("#dataGrid")[0].outerHTML);
+					console.log("done!");
+				}
+			}
+			runner = setInterval(run, getTime(dataIndex) * 1001);
+		},
+		
 		initView: function (param) {
 			if (param == undefined || param == null)
 				return;
@@ -51,36 +81,7 @@ $.extend({
 				});
 			});
 			$("#drcbGrid").append(tr);
-		},
-		
-		getTime: function(dataIndex){
-			return this.param.timeInerval;
-		},
-
-		starter: function (datalist) {
-			var run = function () {
-				console.log("search:"+datalist[dataIndex]);
-				var data = datalist[dataIndex];
-				//handle
-				try {
-					var result = this.param.query(data);
-					print(result);
-				} catch (e) {}
-				finally {
-					dataIndex++;
-				}
-				
-				clearInterval(runner);
-				runner = setInterval(run, getTime(dataIndex) * 1001);
-				if (dataIndex >= datalist.length) {
-					clearInterval(runner);
-					delete this.dataIndex;
-					//结束
-					$("body").replaceWith($("#dataGrid")[0].outerHTML);
-					console.log("done!");
-				}
-			}
-			runner = setInterval(run, getTime(dataIndex) * 1001);
 		}
+		
 	}
 });
