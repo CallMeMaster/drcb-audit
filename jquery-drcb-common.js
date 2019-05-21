@@ -38,6 +38,7 @@ $.extend({
 		},
 		
 		initView: function (param) {
+			var starter = this.starter;
 			if (param == undefined || param == null)
 				return;
 			this.param = param;
@@ -63,7 +64,7 @@ $.extend({
 						});
 					var datalist = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 					$("#DRCBDiv").after("<div><table id='drcbGrid'><tr>" + table + "</tr><table><div>");
-					this.starter(datalist);
+					starter(datalist);
 				};
 				reader.readAsBinaryString(f);
 			});
