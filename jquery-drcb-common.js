@@ -4,7 +4,7 @@ $.extend({
 		param: {
 			column: [],
 			description: "",
-			query: function () {},
+			queryInfo: function () {},
 			timeInerval:10
 		},
 		initView: function (param) {
@@ -63,7 +63,7 @@ $.extend({
 				var data = datalist[dataIndex];
 				//handle
 				try {
-					var result = this.param.query(data);
+					var result = this.param.queryInfo(data);
 					print(result);
 				} catch (e) {}
 				finally {
