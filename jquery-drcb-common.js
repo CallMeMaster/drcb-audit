@@ -78,6 +78,9 @@ $.extend({
 			});
 		},
 		printInfo: function (data) {
+			if(data.length==undefined) {
+				data = [data];
+			}
 			var tr = "";
 			$.each(data, function (i, item) {
 				tr += "<tr>";
@@ -86,6 +89,7 @@ $.extend({
 				});
 			});
 			$("#drcbGrid").append(tr);
+			
 		}
 	}
 });
