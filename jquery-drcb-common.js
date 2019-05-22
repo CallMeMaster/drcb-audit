@@ -20,7 +20,8 @@ $.extend({
 				//handle
 				try {
 					var result = drcb.param.query(data);
-					printInfo(result);
+                    console.log("xx:"+result);
+					drcb.printInfo(result);
 				} catch (e) {}
 				finally {
 					drcb.dataIndex++;
@@ -78,6 +79,7 @@ $.extend({
 			});
 		},
 		printInfo: function (data) {
+            console.log("print:"+data);
 			if(data.length==undefined) {
 				data = [data];
 			}
