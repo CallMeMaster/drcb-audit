@@ -15,12 +15,10 @@ $.extend({
             var drcb = this;
             var runner;
 			var run = function () {
-				console.log("search:"+datalist[drcb.dataIndex]);
 				var data = datalist[drcb.dataIndex];
 				//handle
 				try {
 					var result = drcb.param.query(data);
-                    console.log("xx:"+result);
 					drcb.printInfo(result);
 				} catch (e) {}
 				finally {
@@ -79,19 +77,22 @@ $.extend({
 			});
 		},
 		printInfo: function (data) {
-            console.log("print:"+data);
+            if(data==undefined || data==null) {
+                return;
+            }
+            var drcb=this;
 			if(data.length==undefined) {
 				data = [data];
 			}
 			var tr = "";
 			$.each(data, function (i, item) {
 				tr += "<tr>";
-				$.each(this.param.column, function (j, column) {
+				$.each(drcb.param.column, function (j, column) {
 					tr += "<td>" + item[column] + "</td>";
 				});
+               tr += "</tr>";
 			});
 			$("#drcbGrid").append(tr);
-			
 		}
 	}
 });
