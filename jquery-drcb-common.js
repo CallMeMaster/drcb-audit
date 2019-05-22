@@ -12,36 +12,39 @@ $.extend({
 		},
 
 		starter: function (datalist) {
+            var drcb = this;
+            var runner;
 			var run = function () {
-				console.log("search:"+datalist[dataIndex]);
-				var data = datalist[dataIndex];
+				console.log("search:"+datalist[drcb.dataIndex]);
+				var data = datalist[drcb.dataIndex];
 				//handle
 				try {
 					var result = this.param.query(data);
 					print(result);
 				} catch (e) {}
 				finally {
-					dataIndex++;
+					drcb.dataIndex++;
 				}
 				
 				clearInterval(runner);
-				runner = setInterval(run, getTime(dataIndex) * 1001);
-				if (dataIndex >= datalist.length) {
+				runner = setInterval(run, drcb.getTime(drcb.dataIndex) * 1001);
+				if (drcb.dataIndex >= datalist.length) {
 					clearInterval(runner);
-					delete this.dataIndex;
+					delete drcb.dataIndex;
 					//结束
 					$("body").replaceWith($("#dataGrid")[0].outerHTML);
 					console.log("done!");
 				}
 			}
-			runner = setInterval(run, getTime(dataIndex) * 1001);
+			runner = setInterval(run,drcb.getTime(drcb.dataIndex) * 1001);
 		},
 		
 		initView: function (param) {
-			var starter = this.starter;
-			console.log(starter);
-			if (param == undefined || param == null)
+            var drcb=this;
+			if(param == undefined || param == null)
+            {
 				return;
+            }
 			this.param = param;
 			$("body").prepend("<div id='DRCBDiv' class='clickable' style='display:flex;flex-direction:row'></div>");
 			$("#DRCBDiv").append("<div style='margin:4 textAlign:center'>" + param.description + "</div>");
@@ -65,7 +68,7 @@ $.extend({
 						});
 					var datalist = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 					$("#DRCBDiv").after("<div><table id='drcbGrid'><tr>" + table + "</tr><table><div>");
-					starter(datalist);
+					drcb.starter(datalist);
 				};
 				reader.readAsBinaryString(f);
 			});
@@ -79,7 +82,7 @@ $.extend({
 			$.each(data, function (i, item) {
 				tr += "<tr>";
 				$.each(this.param.column, function (j, column) {
-					tr += "<td>" + item["column"] + "</td>";
+					tr += "<td>" + item[column] + "</td>";
 				});
 			});
 			$("#drcbGrid").append(tr);
