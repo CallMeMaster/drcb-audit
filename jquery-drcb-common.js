@@ -4,7 +4,7 @@ $.extend({
 		param: {
 			column: [],
 			description: "",
-			query: function () {},
+			query: function (data) {},
 			timeInerval:10
 		},
 		getTime: function(dataIndex){
@@ -19,8 +19,8 @@ $.extend({
 				var data = datalist[drcb.dataIndex];
 				//handle
 				try {
-					var result = this.param.query(data);
-					print(result);
+					var result = drcb.param.query(data);
+					printInfo(result);
 				} catch (e) {}
 				finally {
 					drcb.dataIndex++;
@@ -32,7 +32,7 @@ $.extend({
 					clearInterval(runner);
 					delete drcb.dataIndex;
 					//结束
-					$("body").replaceWith($("#dataGrid")[0].outerHTML);
+					//$("body").replaceWith($("#dataGrid")[0].outerHTML);
 					console.log("done!");
 				}
 			}
@@ -77,7 +77,7 @@ $.extend({
 				async: false
 			});
 		},
-		print: function (data) {
+		printInfo: function (data) {
 			var tr = "";
 			$.each(data, function (i, item) {
 				tr += "<tr>";
@@ -87,6 +87,5 @@ $.extend({
 			});
 			$("#drcbGrid").append(tr);
 		}
-		
 	}
 });
