@@ -31,7 +31,7 @@ $.extend({
 					clearInterval(runner);
 					delete drcb.dataIndex;
 					//结束
-					//$("body").replaceWith($("#dataGrid")[0].outerHTML);
+					$("body").replaceWith($("#drcbGrid")[0].outerHTML);
 					console.log("done!");
 				}
 			}
