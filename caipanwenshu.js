@@ -19,7 +19,7 @@
 
     var companylist;
     var runner;
-	var homeurl="https://www.qichacha.com";
+	var homeurl="http://wenshu.court.gov.cn/List/ListContent";
 
     function getKey() {
         var i = 25 - 10 - 8 - 2;
@@ -29,35 +29,30 @@
         var b = str.substr(4) + a.substr( - i - 1);
         c = md5(str).substr(i - 1, 24);
         return c
-    }
+    };
 
-    var rquestParam = {
-        Param: "基层法院:德清县人民法院,全文检索:",
-        Index: 1,
-        Page: 10,
-        Order: "法院层级",
-        Direction: "asc",
-        vl5x: getKey(),
-        number: "",
-        guid: ""
-    }
+    var getRequestParam = function(name) {
+        return {
+            Param: "基层法院:德清县人民法院,全文检索:"+name,
+            Index: 1,
+            Page: 10,
+            Order: "法院层级",
+            Direction: "asc",
+            vl5x: getKey(),
+            number: "",
+            guid: ""
+        }
+    };
 
     var param = {
         column: ['姓名', '状态'],
         description: '使用说明：请导入包含【姓名】字段的excel文件！',
         query: function (data) {
+            console.log(data);
+            var p = getRequestParam(data.姓名);
+            console.log(p);
             console.log(7777);
-
-            console.log(7777);
-            console.log(7777);
-            var p = [];
-            console.log(7777);
-            
-            //p.Param=requestParam+data.姓名;
-            //console.log(requestParam);
-            //console.log(p);
-           // $.post(requestParam,function(data){console.log(data)});
-
+            $.post(homeurl,p,function(data){console.log(data)}); //4aff0020c7044c12a204134b
         }
     };
 
