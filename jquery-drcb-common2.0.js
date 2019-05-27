@@ -40,7 +40,6 @@ $.extend({
 			}
 			runner = setInterval(run, drcb.getTime(drcb.taskIndex) * 1001);
 		},
-
 		initView: function (param) {
 			var drcb = this;
 			if (param == undefined || param == null) {
