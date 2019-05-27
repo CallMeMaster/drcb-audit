@@ -24,7 +24,7 @@ $.extend({
 				try {
 					var result = eval(drcb.taskPool[taskIndex]);
 					drcb.printInfo(result);
-				} catch (e) {}
+				} catch (e) {console.log(e)}
 				finally {
 					drcb.taskIndex++;
 				}
