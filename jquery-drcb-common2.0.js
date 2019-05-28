@@ -1,7 +1,7 @@
 $.extend({
 	drcb: {
 		taskIndex: 0,
-		taskPool:[],
+		taskPool: [],
 		param: {
 			column: [],
 			description: "",
@@ -14,24 +14,28 @@ $.extend({
 
 		starter: function (datalist) {
 			var drcb = this;
-			$.each(datalist,function(i,item){
-				drcb.taskPool.push("drcb.param.query("+item+")");
+			$.each(datalist, function (i, item) {
+				var itemStr = JSON.stringify(item);
+				drcb.taskPool.push("var param=" + itemStr + ";drcb.param.query(param)");
 			});
-			drcb.taskIndex=0;
+			drcb.taskIndex = 0;
 			var runner;
 			var run = function () {
 				//handle
 				try {
-					var result = eval(drcb.taskPool[taskIndex]);
+					console.log(drcb.taskPool[drcb.taskIndex]);
+					var result = eval(drcb.taskPool[drcb.taskIndex]);
 					drcb.printInfo(result);
-				} catch (e) {console.log(e)}
+				} catch (e) {
+					console.log(e)
+				}
 				finally {
 					drcb.taskIndex++;
 				}
 
 				clearInterval(runner);
 				runner = setInterval(run, drcb.getTime(drcb.taskIndex) * 1001);
-				if (drcb.taskIndex >= taskPool.length) {
+				if (drcb.taskIndex >= drcb.taskPool.length) {
 					clearInterval(runner);
 					//结束
 					$("body").replaceWith($("#drcbGrid")[0].outerHTML);
