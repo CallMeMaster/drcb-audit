@@ -38,7 +38,7 @@
 				//workbook.SheetNames[0]是获取Sheets中第一个Sheet的名字
 				//workbook.Sheets[Sheet名]获取第一个Sheet的数据
 				companylist = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-				$("#DRCBDiv").after("<div><table id='dataGrid'><tr><td>序号</td><td>名称</td><td>状态</td><td>公司类型</td><td>成立日期</td><td>地址</td><td>关系人</td><td>备注</td><td>状态</td></tr><table><div>");
+				$("#DRCBDiv").after("<div><table id='dataGrid'><tr><td>序号</td><td>名称</td><td>状态</td><td>公司类型</td><td>成立日期</td><td>地址</td><td>所属地</td><td>关系人</td><td>备注</td><td>状态</td></tr><table><div>");
 				starter(companylist);
 			};
 			reader.readAsBinaryString(f);
@@ -76,7 +76,7 @@
     }
     var print=function(company){
         var tr="";
-        var persons = [].concat(company.legal).concat(company.partner).concat(company.mainmember);
+        var persons = [1]
         $.each(persons,function(i,person){
             tr += "<tr>";
             tr += "<td>"+companyIndex+"</td>";
@@ -85,8 +85,9 @@
             tr += "<td>"+company.type+"</td>";
             tr += "<td>"+company.createDate+"</td>";
             tr += "<td>"+company.address+"</td>";
-            tr += "<td>"+person.name+"</td>";
-            tr += "<td>"+person.share+"</td>";
+            tr += "<td>"+company.location+"</td>";
+            tr += "<td></td>";
+            tr += "<td></td>";
             tr += "<td>SUCCESS</td>";
             tr += "/<tr>";
         });
@@ -99,6 +100,7 @@
             tr += "<td>"+company.type+"</td>";
             tr += "<td>"+company.createDate+"</td>";
             tr += "<td>"+company.address+"</td>";
+            tr += "<td>"+company.location+"</td>";
             tr += "<td></td>";
 	    tr += "<td></td>";
             tr += "<td>FAIL</td>";
@@ -118,7 +120,7 @@
 
     //间隔时间测算
 	var getTime = function(index){
-        return 10
+        return 20
 	}
 
     var Company = function(name) {
@@ -132,6 +134,7 @@
         this.partner = [];
         this.mainmember = [];
         this.legal=[];
+        this.location="";
         this.getHtml = function() {
             var detailHtml = "";
             $.get(homeurl + "/search?key="+this.name,function(data){
@@ -182,6 +185,7 @@
             this.createDate=this.getValue("#Cominfo > table:nth-child(4) > tbody > tr:nth-child(2) > td:nth-child(4)");
             this.address=this.getValue("#company-top > div.row > div.content > div.dcontent > div:nth-child(2) > span.cvlu > a:nth-child(1)");
             this.type = this.getValue("#Cominfo > table:nth-child(4) > tbody > tr:nth-child(5) > td:nth-child(2)");
+            this.location=this.getValue("#Cominfo > table > tbody > tr:nth-child(8) > td:nth-child(2)");
             this.partner = this.getPartner();
             this.mainmember = this.getMainmember();
             this.legal = this.getLegal();
