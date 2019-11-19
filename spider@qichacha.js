@@ -8,7 +8,7 @@
 // @match        https://www.qichacha.com*
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      http://oss.sheetjs.com/js-xlsx/xlsx.full.min.js
+// @require      https://cdn.bootcss.com/xlsx/0.15.1/xlsx.full.min.js
 // ==/UserScript==
 
 (function() {
